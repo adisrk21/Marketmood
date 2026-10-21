@@ -1,0 +1,48 @@
+databases:
+  - name: market-mood-db
+    databaseName: market_mood
+    user: market_mood
+    region: singapore
+    plan: basic-256mb
+services:
+  - type: web
+    name: india-market-mood
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.address 0.0.0.0 --server.port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATABASE_URL
+        fromDatabase:
+          name: market-mood-db
+          property: connectionString
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: DATA_PERIOD
+        value: 2y
+  - type: cron
+    name: market-mood-daily-update
+    runtime: python
+    region: singapore
+    plan: starter
+    schedule: "10 10 * * 1-5"
+    buildCommand: pip install -r requirements.txt
+    startCommand: python scripts/daily_update.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATABASE_URL
+        fromDatabase:
+          name: market-mood-db
+          property: connectionString
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: DATA_PERIOD
+        value: 2y

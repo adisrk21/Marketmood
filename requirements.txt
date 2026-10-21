@@ -1,0 +1,12 @@
+streamlit==1.51.0
+pandas==2.3.3
+numpy==2.3.4
+yfinance==0.2.66
+plotly==6.3.1
+SQLAlchemy==2.0.44
+psycopg[binary]==3.2.12
+python-dotenv==1.1.1
+requests==2.32.5
+beautifulsoup4==4.14.2
+lxml==6.0.2
+pytest==8.4.2
